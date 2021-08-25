@@ -3,6 +3,9 @@ import { resolveTxt } from "dns";
 import { Request, Response } from "express";
 import { type } from "os";
 
+const express = require("express");
+const app = express();
+
 const supabase = createClient(
   "https://clhiogfbhdkwkomjretd.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYyMzAzMjQ0MCwiZXhwIjoxOTM4NjA4NDQwfQ.Y77HcMFE1RoMsAcEgNd8iUpOaqkJ3-JBKSoU9U9ZUJ0"
@@ -17,9 +20,9 @@ type Treaty = {
   treaty_type: string;
 };
 
-exports.request = async (req: Request, res: Response) => {
+const treaties = async (req: Request, res: Response): Promise<void> => {
   try {
-    let { id } = req.params;
+    let { id } = req.query;
     if (!id) {
       throw Error("Missing alliance ID");
     }
@@ -50,3 +53,5 @@ exports.request = async (req: Request, res: Response) => {
     res.status(500).json({ success: false, error: error.message });
   }
 };
+
+export default treaties;

@@ -22,7 +22,7 @@ type Resource = {
 interface Price {
   [key: string]: {
     datetime: string;
-    market_index: number;
+    market_index: string;
     resource: Resource;
     credit: Resource;
     coal: Resource;
@@ -39,7 +39,7 @@ interface Price {
   };
 }
 
-exports.request = async (req: Request, res: Response): Promise<void> => {
+const prices = async (req: Request, res: Response): Promise<void> => {
   try {
     const { data, error } = await supabase
       .from<Price>("prices")
@@ -53,34 +53,45 @@ exports.request = async (req: Request, res: Response): Promise<void> => {
     if (data) {
       const keys = Object.keys(data[0]);
       const final: Price = { ...data[0] };
-      // @ts-ignore
-      final.market_index = Number(data[0].credit.market_index.replace(",", ""));
+      delete keys[0];
       for (const key of keys) {
+        if (!key) {
+          continue;
+        }
         // @ts-ignore
         const res = JSON.parse(data[0][key]);
+        console.log(res);
         final[key] = {
           // @ts-ignore
           avg_price: res.avg_price,
           highest_buy: {
-            date: res.highest_buy.date,
-            nation_id: Number(res.highest_buy.nation_id),
-            amount: Number(res.highest_buy.amount),
-            price: Number(res.highest_buy.price),
-            total_value: res.highest_buy.total_value,
+            date: res.highestbuy.date,
+            nation_id: Number(res.highestbuy.nation_id),
+            amount: Number(res.highestbuy.amount),
+            price: Number(res.highestbuy.price),
+            total_value: res.highestbuy.total_value,
           },
           lowest_buy: {
-            date: res.lowest_buy.date,
-            nation_id: Number(res.lowest_buy.nation_id),
-            amount: Number(res.lowest_buy.amount),
-            price: Number(res.lowest_buy.price),
-            total_value: res.lowest_buy.total_value,
+            date: res.lowestbuy.date,
+            nation_id: Number(res.lowestbuy.nation_id),
+            amount: Number(res.lowestbuy.amount),
+            price: Number(res.lowestbuy.price),
+            total_value: res.lowestbuy.total_value,
           },
         };
       }
+      // @ts-ignore
+      final.market_index = Number(
+        // @ts-ignore
+        JSON.parse(data[0].credit).marketindex.replace(",", "")
+      );
       res.status(200).json({ success: true, data: final });
     }
     throw Error("Error fetching alliance data");
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
+    throw error;
   }
 };
+
+export default prices;

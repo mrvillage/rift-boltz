@@ -160,7 +160,7 @@ async function calculateSpies(id: number): Promise<number> {
   }
 }
 
-exports.request = async (req: Request, res: Response): Promise<void> => {
+const spies = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.query;
   try {
     let nation = Number(id);
@@ -168,8 +168,17 @@ exports.request = async (req: Request, res: Response): Promise<void> => {
       throw Error("Invalid nation ID");
     }
     const num = await calculateSpies(nation);
-    res.json({ success: true, data: { id: id, spies: num } });
+    res.json({
+      success: true,
+      data: { id: id, spies: num },
+      note: "SPY COUNTS ARE OFF BY 1-2 BECAUSE I CHANGED MY WAR POLICY LIKE A MORON. THIS MESSAGE WILL BE REMOVED AND WAR POLICY CHANGED WHEN MY TIMER RUNS OUT.",
+    });
   } catch (e) {
-    res.status(500).json({ success: false, error: e.message });
+    res.status(500).json({
+      success: false,
+      error: e.message,
+    });
   }
 };
+
+export default spies;

@@ -12,9 +12,9 @@ type Link = {
   nation: number;
 };
 
-exports.request = async (req: Request, res: Response) => {
+const link = async (req: Request, res: Response) => {
   try {
-    let { id } = req.params;
+    let { id } = req.query;
     if (!id) {
       throw Error("Missing nation or user ID");
     }
@@ -24,8 +24,9 @@ exports.request = async (req: Request, res: Response) => {
     const { data, error } = await supabase
       .from<Link>("links")
       .select()
-      .or(`eq.${id},to.eq.${id}`);
+      .or(`id.eq.${id},nation.eq.${id}`);
     if (error) {
+      console.error(error);
       throw Error("Error fetching link data");
     }
     if (data) {
@@ -38,3 +39,5 @@ exports.request = async (req: Request, res: Response) => {
     res.status(500).json({ success: false, error: error.message });
   }
 };
+
+export default link;

@@ -34,7 +34,7 @@ type Nation = {
   nukes: number;
 };
 
-exports.request = async (req: Request, res: Response): Promise<void> => {
+const nations = async (req: Request, res: Response): Promise<void> => {
   try {
     const { data, error } = await supabase.from<Nation>("nations").select();
     if (error) {
@@ -54,3 +54,5 @@ exports.request = async (req: Request, res: Response): Promise<void> => {
     res.status(500).json({ success: false, error: error.message });
   }
 };
+
+export default nations;

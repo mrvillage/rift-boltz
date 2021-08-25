@@ -24,7 +24,7 @@ type Alliance = {
   irrchan: string;
 };
 
-exports.request = async (req: Request, res: Response): Promise<void> => {
+const alliances = async (req: Request, res: Response): Promise<void> => {
   try {
     const { data, error } = await supabase.from<Alliance>("alliances").select();
     if (error) {
@@ -44,3 +44,4 @@ exports.request = async (req: Request, res: Response): Promise<void> => {
     res.status(500).json({ success: false, error: error.message });
   }
 };
+export default alliances;

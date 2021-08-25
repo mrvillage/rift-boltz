@@ -1,17 +1,8 @@
 const express = require("express");
-const expressTypes = require("types/express");
+const services = require("./services").default;
 
 const app = express();
 
-import { PostgrestClient } from "@supabase/postgrest-js";
-
-async function func() {
-  const { data, error } = await client.from("alliances").select("name");
-  console.log(data, error);
-}
-const client = new PostgrestClient("https://clhiogfbhdkwkomjretd.supabase.co");
-
-await func();
 app.get("/", (req: any, res: any) => {
   res
     .status(200)
@@ -20,5 +11,13 @@ app.get("/", (req: any, res: any) => {
     )
     .end();
 });
+
+app.get("/alliances", services.alliances);
+// app.get("/cities", services.cities);
+app.get("/link", services.link);
+app.get("/nations", services.nations);
+app.get("/prices", services.prices);
+app.get("/spies", services.spies);
+app.get("/treaties", services.treaties);
 
 exports.request = app;
