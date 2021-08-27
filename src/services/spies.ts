@@ -189,7 +189,7 @@ const spies = async (req: Request, res: Response): Promise<void> => {
     } else {
       res.status(500).json({
         success: false,
-        error: error.message,
+        error: "Internal Server Error",
       });
     }
   }
