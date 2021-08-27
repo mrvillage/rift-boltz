@@ -26,7 +26,7 @@ const link = async (req: Request, res: Response) => {
       .or(`id.eq.${id},nation.eq.${id}`);
     if (error) {
       console.error(error);
-      throw Error("Internal Server Error");
+      throw Error("500");
     }
     if (data) {
       if (!data[0]) {
@@ -35,7 +35,7 @@ const link = async (req: Request, res: Response) => {
       const user = { user_id: String(data[0].id), nation_id: data[0].nation };
       res.status(200).json({ success: true, data: user });
     } else {
-      throw Error("Internal Server Error");
+      throw Error("500");
     }
   } catch (error) {
     if (error.message == "400") {
@@ -48,7 +48,7 @@ const link = async (req: Request, res: Response) => {
         .status(404)
         .json({ success: true, data: { user_id: null, nation_id: null } });
     } else {
-      res.status(500).json({ success: false, error: error.message });
+      res.status(500).json({ success: false, error: "Internal Server Error" });
     }
   }
 };

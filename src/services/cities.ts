@@ -21,14 +21,14 @@ const cities = async (req: Request, res: Response): Promise<void> => {
     const { data, error } = await supabase.from<City>("cities").select();
     if (error) {
       console.error(error);
-      throw Error("Internal Server Error");
+      throw Error("500");
     }
     if (data) {
       res.status(200).json({ success: true, data });
     }
-    throw Error("Internal Server Error");
+    throw Error("500");
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: "Internal Server Error" });
   }
 };
 

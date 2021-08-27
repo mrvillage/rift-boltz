@@ -48,7 +48,7 @@ const prices = async (req: Request, res: Response): Promise<void> => {
       .limit(1);
     if (error) {
       console.error(error);
-      throw Error("Internal Server Error");
+      throw Error("500");
     }
     if (data) {
       const keys = Object.keys(data[0]);
@@ -86,9 +86,9 @@ const prices = async (req: Request, res: Response): Promise<void> => {
       );
       res.status(200).json({ success: true, data: final });
     }
-    throw Error("Internal Server Error");
+    throw Error("500");
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: "Internal Server Error" });
     throw error;
   }
 };

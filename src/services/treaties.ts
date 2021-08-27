@@ -24,17 +24,17 @@ const treaties = async (req: Request, res: Response): Promise<void> => {
   try {
     let { id } = req.query;
     if (!id) {
-      throw Error("Missing alliance ID.");
+      throw Error("400");
     }
     if (isNaN(Number(id))) {
-      throw Error("Invalid alliance ID.");
+      throw Error("400");
     }
     const { data, error } = await supabase
       .from<Treaty>("treaties")
       .select()
       .or(`from_.eq.${id},to_.eq.${id}`);
     if (error) {
-      throw Error("Error fetching treaty data.");
+      throw Error("500");
     }
     if (!data) {
       res.status(200).json({ success: true, data });
@@ -49,8 +49,15 @@ const treaties = async (req: Request, res: Response): Promise<void> => {
       }
       res.status(200).json({ success: true, data });
     }
+    throw Error("500");
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    if (error.message == "400") {
+      res
+        .status(400)
+        .json({ success: false, error: "Invalid or no alliance ID specified" });
+    } else {
+      res.status(500).json({ success: false, error: "Internal Server Error" });
+    }
   }
 };
 
