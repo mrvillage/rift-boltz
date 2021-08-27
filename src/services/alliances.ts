@@ -29,7 +29,7 @@ const alliances = async (req: Request, res: Response): Promise<void> => {
     const { data, error } = await supabase.from<Alliance>("alliances").select();
     if (error) {
       console.error(error);
-      throw Error("Error fetching alliance data");
+      throw Error("Internal Server Error");
     }
     if (data) {
       for (const alliance of data) {
@@ -39,7 +39,7 @@ const alliances = async (req: Request, res: Response): Promise<void> => {
       }
       res.status(200).json({ success: true, data });
     }
-    throw Error("Error fetching alliance data");
+    throw Error("Internal Server Error");
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

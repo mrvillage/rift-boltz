@@ -48,7 +48,7 @@ const prices = async (req: Request, res: Response): Promise<void> => {
       .limit(1);
     if (error) {
       console.error(error);
-      throw Error("Error fetching alliance data");
+      throw Error("Internal Server Error");
     }
     if (data) {
       const keys = Object.keys(data[0]);
@@ -60,23 +60,22 @@ const prices = async (req: Request, res: Response): Promise<void> => {
         }
         // @ts-ignore
         const res = JSON.parse(data[0][key]);
-        console.log(res);
         final[key] = {
           // @ts-ignore
-          avg_price: res.avg_price,
+          avg_price: Number(res.avgprice),
           highest_buy: {
             date: res.highestbuy.date,
-            nation_id: Number(res.highestbuy.nation_id),
+            nation_id: Number(res.highestbuy.nationid),
             amount: Number(res.highestbuy.amount),
             price: Number(res.highestbuy.price),
-            total_value: res.highestbuy.total_value,
+            total_value: Number(res.highestbuy.totalvalue),
           },
           lowest_buy: {
             date: res.lowestbuy.date,
-            nation_id: Number(res.lowestbuy.nation_id),
+            nation_id: Number(res.lowestbuy.nationid),
             amount: Number(res.lowestbuy.amount),
             price: Number(res.lowestbuy.price),
-            total_value: res.lowestbuy.total_value,
+            total_value: Number(res.lowestbuy.totalvalue),
           },
         };
       }
@@ -87,7 +86,7 @@ const prices = async (req: Request, res: Response): Promise<void> => {
       );
       res.status(200).json({ success: true, data: final });
     }
-    throw Error("Error fetching alliance data");
+    throw Error("Internal Server Error");
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
     throw error;

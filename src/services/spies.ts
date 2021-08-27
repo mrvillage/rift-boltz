@@ -126,12 +126,12 @@ async function calculateSpies(id: number): Promise<number> {
     .match({ id });
   let nation;
   if (error) {
-    throw Error(`Error finding nation with id ${id}`);
+    throw Error("404");
   } else if (data) {
     nation = data[0];
   }
   if (!nation) {
-    throw Error(`Could not find nation with id ${id}`);
+    throw Error("404");
   }
   let safetyLevels;
   if (nation.war_policy == 10 || nation.war_policy == 7) {
@@ -161,23 +161,37 @@ async function calculateSpies(id: number): Promise<number> {
 }
 
 const spies = async (req: Request, res: Response): Promise<void> => {
-  const { id } = req.query;
   try {
-    let nation = Number(id);
-    if (isNaN(nation)) {
-      throw Error("Invalid nation ID");
+    let { id } = req.query;
+    if (!id) {
+      throw Error("400");
     }
-    const num = await calculateSpies(nation);
+    if (isNaN(Number(id))) {
+      throw Error("400");
+    }
+    const num = await calculateSpies(Number(id));
     res.json({
       success: true,
       data: { id: id, spies: num },
-      note: "SPY COUNTS ARE OFF BY 1-2 BECAUSE I CHANGED MY WAR POLICY LIKE A MORON. THIS MESSAGE WILL BE REMOVED AND WAR POLICY CHANGED WHEN MY TIMER RUNS OUT.",
+      margin: 2,
     });
-  } catch (e) {
-    res.status(500).json({
-      success: false,
-      error: e.message,
-    });
+  } catch (error) {
+    if (error.message === "400") {
+      res.json({
+        success: false,
+        error: "Invalid or no nation ID specified",
+      });
+    } else if (error.message === "404") {
+      res.json({
+        success: false,
+        error: "Nation not found",
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        error: error.message,
+      });
+    }
   }
 };
 

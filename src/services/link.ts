@@ -1,6 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
 import { Request, Response } from "express";
-import { type } from "os";
 
 const supabase = createClient(
   "https://clhiogfbhdkwkomjretd.supabase.co",
@@ -16,10 +15,10 @@ const link = async (req: Request, res: Response) => {
   try {
     let { id } = req.query;
     if (!id) {
-      throw Error("Missing nation or user ID");
+      throw Error("400");
     }
     if (isNaN(Number(id))) {
-      throw Error("Invalid nation or user ID");
+      throw Error("400");
     }
     const { data, error } = await supabase
       .from<Link>("links")
@@ -27,16 +26,30 @@ const link = async (req: Request, res: Response) => {
       .or(`id.eq.${id},nation.eq.${id}`);
     if (error) {
       console.error(error);
-      throw Error("Error fetching link data");
+      throw Error("Internal Server Error");
     }
     if (data) {
-      const user = { user_id: data[0].id, nation_id: data[0].nation };
+      if (!data[0]) {
+        throw Error("404");
+      }
+      const user = { user_id: String(data[0].id), nation_id: data[0].nation };
       res.status(200).json({ success: true, data: user });
     } else {
-      throw Error("Error fetching link data");
+      throw Error("Internal Server Error");
     }
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    if (error.message == "400") {
+      res.status(400).json({
+        success: false,
+        error: "Invalid or no nation or user ID specified",
+      });
+    } else if (error.message === "404") {
+      res
+        .status(404)
+        .json({ success: true, data: { user_id: null, nation_id: null } });
+    } else {
+      res.status(500).json({ success: false, error: error.message });
+    }
   }
 };
 

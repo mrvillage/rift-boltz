@@ -24,17 +24,17 @@ const treaties = async (req: Request, res: Response): Promise<void> => {
   try {
     let { id } = req.query;
     if (!id) {
-      throw Error("Missing alliance ID");
+      throw Error("Missing alliance ID.");
     }
     if (isNaN(Number(id))) {
-      throw Error("Invalid alliance ID");
+      throw Error("Invalid alliance ID.");
     }
     const { data, error } = await supabase
       .from<Treaty>("treaties")
       .select()
       .or(`from_.eq.${id},to_.eq.${id}`);
     if (error) {
-      throw Error("Error fetching treaty data");
+      throw Error("Error fetching treaty data.");
     }
     if (!data) {
       res.status(200).json({ success: true, data });
