@@ -170,7 +170,7 @@ const spies = async (req: Request, res: Response): Promise<void> => {
       throw Error("400");
     }
     const num = await calculateSpies(Number(id));
-    res.json({
+    res.status(200).json({
       success: true,
       data: { id: id, spies: num },
       margin: 2,

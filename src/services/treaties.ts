@@ -49,7 +49,6 @@ const treaties = async (req: Request, res: Response): Promise<void> => {
       }
       res.status(200).json({ success: true, data });
     }
-    throw Error("500");
   } catch (error) {
     if (error.message == "400") {
       res

@@ -38,7 +38,7 @@ const nations = async (req: Request, res: Response): Promise<void> => {
   try {
     const { data, error } = await supabase.from<Nation>("nations").select();
     if (error) {
-      console.error(error);
+      console.error(error.toString());
       throw Error("500");
     }
     if (data) {
@@ -48,6 +48,7 @@ const nations = async (req: Request, res: Response): Promise<void> => {
         }
       }
       res.status(200).json({ success: true, data });
+      return;
     }
     throw Error("500");
   } catch (error) {

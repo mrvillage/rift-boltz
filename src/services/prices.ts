@@ -47,7 +47,7 @@ const prices = async (req: Request, res: Response): Promise<void> => {
       .order("datetime", { ascending: false })
       .limit(1);
     if (error) {
-      console.error(error);
+      console.error(error.toString());
       throw Error("500");
     }
     if (data) {
@@ -85,6 +85,7 @@ const prices = async (req: Request, res: Response): Promise<void> => {
         JSON.parse(data[0].credit).marketindex.replace(",", "")
       );
       res.status(200).json({ success: true, data: final });
+      return;
     }
     throw Error("500");
   } catch (error) {

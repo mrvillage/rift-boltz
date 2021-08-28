@@ -24,11 +24,11 @@ type Alliance = {
   irrchan: string;
 };
 
-const alliances = async (req: Request, res: Response): Promise<void> => {
+export default async (req: Request, res: Response): Promise<void> => {
   try {
     const { data, error } = await supabase.from<Alliance>("alliances").select();
     if (error) {
-      console.error(error);
+      console.error(error.toString());
       throw Error("500");
     }
     if (data) {
@@ -38,10 +38,10 @@ const alliances = async (req: Request, res: Response): Promise<void> => {
         alliance.heir_ids = JSON.parse(alliance.heir_ids);
       }
       res.status(200).json({ success: true, data });
+      return;
     }
     throw Error("500");
   } catch (error) {
     res.status(500).json({ success: false, error: "Internal Server Error" });
   }
 };
-export default alliances;

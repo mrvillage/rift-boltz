@@ -25,7 +25,7 @@ const link = async (req: Request, res: Response) => {
       .select()
       .or(`id.eq.${id},nation.eq.${id}`);
     if (error) {
-      console.error(error);
+      console.error(error.toString());
       throw Error("500");
     }
     if (data) {
@@ -34,6 +34,7 @@ const link = async (req: Request, res: Response) => {
       }
       const user = { user_id: String(data[0].id), nation_id: data[0].nation };
       res.status(200).json({ success: true, data: user });
+      return;
     } else {
       throw Error("500");
     }
