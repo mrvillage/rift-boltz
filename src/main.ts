@@ -20,4 +20,6 @@ app.get("/prices", services.prices);
 app.get("/spies", services.spies);
 app.get("/treaties", services.treaties);
 
-exports.request = app;
+// exports.request = app;
+
+app.listen(80);
