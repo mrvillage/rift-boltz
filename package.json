@@ -2,7 +2,7 @@
   "name": "rift-boltz",
   "version": "1.0.0",
   "private": true,
-  "main": "src/main.js",
+  "main": "out/main.js",
   "type": "module",
   "devDependencies": {
     "@types/express": "^4.17.13",
