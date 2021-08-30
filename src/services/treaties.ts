@@ -1,15 +1,6 @@
-import { createClient } from "@supabase/supabase-js";
-import { resolveTxt } from "dns";
 import { Request, Response } from "express";
-import { type } from "os";
+import supabase from "../supabase";
 
-const express = require("express");
-const app = express();
-
-const supabase = createClient(
-  "https://clhiogfbhdkwkomjretd.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYyMzAzMjQ0MCwiZXhwIjoxOTM4NjA4NDQwfQ.Y77HcMFE1RoMsAcEgNd8iUpOaqkJ3-JBKSoU9U9ZUJ0"
-);
 type Treaty = {
   started: string;
   stopped: string | null;
